@@ -1,7 +1,9 @@
-Heroku buildpack: Ruby
-======================
+Heroku RGeo Buildpack
+=====================
 
-This is a [Heroku buildpack](http://devcenter.heroku.com/articles/buildpacks) for Ruby, Rack, and Rails apps. It uses [Bundler](http://gembundler.com) for dependency management.
+Heroku RGeo [Buildpack](http://devcenter.heroku.com/articles/buildpacks) is a fork of Heroku's official Ruby buildpack with added binaries to support the rgeo gem.
+
+*Note: Work in progress*
 
 Usage
 -----
