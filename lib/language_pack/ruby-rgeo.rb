@@ -1,5 +1,6 @@
 class LanguagePack::Ruby < LanguagePack::Base
-  def rgeo_url(filename = '')
+  def rgeo_url(filename = nil)
+    filename << '.tgz' if filename
     "https://s3.amazonaws.com/camenischcreative/heroku-binaries/rgeo/#{filename}"
   end
 
@@ -11,10 +12,11 @@ class LanguagePack::Ruby < LanguagePack::Base
   # end
 
   def install_rgeo_binary(name)
-    bin_dir = 'bin'
+    bin_dir = "bin/#{name}"
     FileUtils.mkdir_p bin_dir
+    topic("Downloading #{name} from #{rgeo_url(name)}")
     Dir.chdir(bin_dir) do |dir|
-      pipe("curl #{rgeo_url}/#{name}.tgz -s -o - | tar xzf -")
+      run("curl #{rgeo_url(name)} -s -o - | tar xzf -")
     end
   end
 
