@@ -34,6 +34,8 @@ class LanguagePack::Ruby < LanguagePack::Base
 
   alias_method :orig_compile, :compile
   def compile
+    # Recompile all gems if 'requested' via environment variable
+    cache_clear("vendor/bundle") if ENV['RECOMPILE_ALL_GEMS'] =~ /^(true|on|yes|1)$/
     binaries.each do |(name, version)|
       install_rgeo_binary(name, version)
     end
