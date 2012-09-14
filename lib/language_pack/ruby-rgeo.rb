@@ -1,6 +1,6 @@
 class LanguagePack::Ruby < LanguagePack::Base
   def rgeo_url(filename = nil)
-    filename << '.tgz' if filename
+    filename += '.tgz' if filename
     "https://s3.amazonaws.com/camenischcreative/heroku-binaries/rgeo/#{filename}"
   end
 
