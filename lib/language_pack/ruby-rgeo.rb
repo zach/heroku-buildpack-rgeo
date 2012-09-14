@@ -14,7 +14,7 @@ class LanguagePack::Ruby < LanguagePack::Base
     bin_dir = 'bin'
     FileUtils.mkdir_p bin_dir
     Dir.chdir(bin_dir) do |dir|
-      run("curl #{rgeo_url}/#{name}.tgz -s -o - | tar xzf -")
+      pipe("curl #{rgeo_url}/#{name}.tgz -s -o - | tar xzf -")
     end
   end
 
