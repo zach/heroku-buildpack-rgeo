@@ -44,7 +44,7 @@ class LanguagePack::Ruby < LanguagePack::Base
       install_rgeo_binary(name, version)
     end
     ENV['BUNDLE_BUILD__RGEO'] = binary_names.map{|name| "--with-#{name}-dir=/app/bin/#{name}/lib" }.join(' ')
-    puts ENV.to_hash
+    puts ENV.to_hash.inspect
     orig_compile
   end
 end
