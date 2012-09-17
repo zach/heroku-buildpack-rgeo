@@ -11,12 +11,12 @@ class LanguagePack::Ruby < LanguagePack::Base
     binaries.keys
   end
 
-  alias_method :orig_default_config_vars, :default_config_vars
-  def default_config_vars
-    orig_default_config_vars.tap do |vars|
-      vars['BUNDLE_BUILD__RGEO'] = binary_names.map{|name| "--with-#{name}-dir=/app/bin/#{name}/lib" }.join(' ')
-    end
-  end
+  # alias_method :orig_default_config_vars, :default_config_vars
+  # def default_config_vars
+  #   orig_default_config_vars.tap do |vars|
+  #     vars['BUNDLE_BUILD__RGEO'] = binary_names.map{|name| "--with-#{name}-dir=/app/bin/#{name}/lib" }.join(' ')
+  #   end
+  # end
 
   def install_rgeo_binary(name, version)
     bin_dir = "bin/#{name}"
@@ -39,9 +39,11 @@ class LanguagePack::Ruby < LanguagePack::Base
     # See https://devcenter.heroku.com/articles/labs-user-env-compile
     cache_clear("vendor/bundle") if ENV['RECOMPILE_ALL_GEMS'] =~ /^(true|on|yes|1)$/
 
+
     binaries.each do |(name, version)|
       install_rgeo_binary(name, version)
     end
+    ENV['BUNDLE_BUILD__RGEO'] = binary_names.map{|name| "--with-#{name}-dir=/app/bin/#{name}/lib" }.join(' ')
     orig_compile
   end
 end
