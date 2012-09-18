@@ -11,12 +11,12 @@ class LanguagePack::Ruby < LanguagePack::Base
     binaries.keys
   end
 
-  # alias_method :orig_default_config_vars, :default_config_vars
-  # def default_config_vars
-  #   orig_default_config_vars.tap do |vars|
-  #     vars['BUNDLE_BUILD__RGEO'] = binary_names.map{|name| "--with-#{name}-dir=/app/bin/#{name}/lib" }.join(' ')
-  #   end
-  # end
+  alias_method :orig_default_config_vars, :default_config_vars
+  def default_config_vars
+    orig_default_config_vars.tap do |vars|
+      vars['PATH'] = binary_names.map(':'){|memo, name| "/app/bin/#{name}/lib" }.join(':')
+    end
+  end
 
   def install_rgeo_binary(name, version)
     bin_dir = "bin/#{name}"
