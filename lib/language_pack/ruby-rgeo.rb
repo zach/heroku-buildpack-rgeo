@@ -14,7 +14,7 @@ class LanguagePack::Ruby < LanguagePack::Base
   alias_method :orig_default_config_vars, :default_config_vars
   def default_config_vars
     orig_default_config_vars.tap do |vars|
-      vars['PATH'] = binary_names.map{|name| "/app/bin/#{name}/lib" }.join(':')
+      vars['PATH'] = (vars['PATH'] || '') << ':' << binary_names.map{|name| "/app/bin/#{name}/lib" }.join(':')
     end
   end
 
