@@ -33,7 +33,7 @@ class LanguagePack::Ruby < LanguagePack::Base
   end
 
   def puts_and_pipe(cmd)
-    puts cmd
+    puts '> ' << cmd
     pipe cmd
   end
 
@@ -48,8 +48,9 @@ class LanguagePack::Ruby < LanguagePack::Base
     binaries.each do |(name, version)|
       install_rgeo_binary(name, version)
     end
-    binary_names.each {|name| puts_and_pipe "ls #{pwd}/bin/#{name}" }
-    puts_and_pipe("bundle config build.rgeo #{binary_names.map{|name| "--with-#{name}-dir=#{pwd}/bin/#{name}"}.join(' ')}")
+    binary_names.each {|name| puts_and_pipe "ls #{pwd}/bin" }
+    ENV['BUNDLE_BUILD__RGEO'] = binary_names.map{|name| "--with-#{name}-dir=#{pwd}/bin"}.join(' ')
+    puts ENV.to_hash.inspect
     orig_compile
   end
 end
