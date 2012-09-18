@@ -32,6 +32,11 @@ class LanguagePack::Ruby < LanguagePack::Base
     run('pwd').chomp
   end
 
+  def puts_and_pipe(cmd)
+    puts cmd
+    pipe cmd
+  end
+
   alias_method :orig_compile, :compile
   def compile
     # Recompile all gems if 'requested' via environment variable
@@ -43,9 +48,8 @@ class LanguagePack::Ruby < LanguagePack::Base
     binaries.each do |(name, version)|
       install_rgeo_binary(name, version)
     end
-    binary_names.each {|name| pipe "ls #{pwd}/bin/#{name}" }
-    ENV['BUNDLE_BUILD__RGEO'] = binary_names.map{|name| "--with-#{name}-dir=#{pwd}/bin/#{name}"}.join(' ')
-    puts ENV.to_hash.inspect
+    binary_names.each {|name| puts_and_pipe "ls #{pwd}/bin/#{name}" }
+    puts_and_pipe("bundle config build.rgeo #{binary_names.map{|name| "--with-#{name}-dir=#{pwd}/bin/#{name}"}.join(' ')}")
     orig_compile
   end
 end
