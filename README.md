@@ -22,18 +22,25 @@ $ git push heroku master
 
 ```sh
 $ heroku config:add BUILDPACK_URL=http://github.com/jcamenisch/heroku-buildpack-rgeo
-
+...
 $ heroku config:add RECOMPILE_ALL_GEMS=1
-
+...
 $ heroku labs:enable user-env-compile
-
+...
 $ git push heroku master
+...
 ```
 
 The RECOMPILE_ALL_GEMS variable signals the build process to recompile the rgeo gem, so that the GEOS and PROJ binaries get linked in. The user-env-compile is necessary to allow the RECOMPILE_ALL_GEMS variable to be read.
 
-Both of these settings are unnecessary for the long term, and can be removed after RGeo is running properly.
+Both of these settings are unnecessary for the long term, and can be removed after RGeo is running properly, as follows.
 
+```sh
+$ heroku config:add RECOMPILE_ALL_GEMS=0
+...
+$ heroku labs:disable user-env-compile
+...
+```
 
 Flow (TO-DO)
 ------------
