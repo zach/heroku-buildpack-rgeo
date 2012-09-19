@@ -18,7 +18,7 @@ $ heroku create --stack cedar --buildpack http://github.com/jcamenisch/heroku-bu
 $ git push heroku master
 ```
 
-#### Configuring an existing app with rgeo support
+### Configuring an existing app with rgeo support
 
 ```sh
 $ heroku config:add BUILDPACK_URL=http://github.com/jcamenisch/heroku-buildpack-rgeo
@@ -31,7 +31,7 @@ $ git push heroku master
 ...
 ```
 
-The RECOMPILE_ALL_GEMS variable signals the build process to recompile the rgeo gem, so that the GEOS and PROJ binaries get linked in. The user-env-compile is necessary to allow the RECOMPILE_ALL_GEMS variable to be read.
+The `RECOMPILE_ALL_GEMS` variable signals the build process to recompile the rgeo gem, so that the GEOS and PROJ binaries get linked in. The `user-env-compile` feature is necessary to allow `RECOMPILE_ALL_GEMS` to be read.
 
 Both of these settings are unnecessary for the long term, and can be removed after RGeo is running properly, as follows.
 
