@@ -49,7 +49,11 @@ class LanguagePack::Ruby < LanguagePack::Base
       install_rgeo_binary(name, version)
     end
 
-    binary_names.each {|name| puts_and_pipe "ls #{pwd}/bin/#{name}" }
+    # DEBUG
+    binary_names.each do |name|
+      puts_and_pipe "ls #{pwd}/bin/#{name}/include"
+      puts_and_pipe "ls #{pwd}/bin/#{name}/bin"
+    end
     lib_so_conf_dir = "#{pwd}/etc/ld.so.conf.d"
     FileUtils.mkdir_p(lib_so_conf_dir)
     binary_names.each do |name|
@@ -58,6 +62,8 @@ class LanguagePack::Ruby < LanguagePack::Base
       end
     end
     ENV['BUNDLE_BUILD__RGEO'] = binary_names.map{|name| "--with-#{name}-dir=#{pwd}/bin/#{name}"}.join(' ')
+
+    # DEBUG
     puts ENV.to_hash.inspect
     orig_compile
   end
