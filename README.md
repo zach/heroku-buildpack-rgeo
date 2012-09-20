@@ -21,7 +21,7 @@ $ git push heroku master
 ### Configuring an existing app with rgeo support
 
 ```sh
-$ heroku config:add BUILDPACK_URL=http://github.com/jcamenisch/heroku-buildpack-rgeo LD_LIBRARY_PATH=/app/bin/geos/lib:/app/bin/proj/lib RECOMPILE_ALL_GEMS=1
+$ heroku config:add BUILDPACK_URL=http://github.com/jcamenisch/heroku-buildpack-rgeo.git LD_LIBRARY_PATH=/app/bin/geos/lib:/app/bin/proj/lib RECOMPILE_ALL_GEMS=1
 ...
 $ heroku labs:enable user-env-compile
 ...
