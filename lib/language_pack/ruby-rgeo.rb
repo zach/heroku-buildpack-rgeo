@@ -39,7 +39,7 @@ class LanguagePack::Ruby < LanguagePack::Base
 
   def puts_debug(topic, string)
     topic "puts #{topic} =>"
-    pipe  string
+    puts  string
   end
 
   alias_method :orig_compile, :compile
