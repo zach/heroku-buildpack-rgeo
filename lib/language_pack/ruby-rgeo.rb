@@ -1,4 +1,6 @@
 class LanguagePack::Ruby < LanguagePack::Base
+  TRUTHY_STRING = /^(true|on|yes|1)$/
+
   def rgeo_url(filename = nil)
     "https://s3.amazonaws.com/camenischcreative/heroku-binaries/rgeo/#{filename}"
   end
@@ -11,12 +13,12 @@ class LanguagePack::Ruby < LanguagePack::Base
     binaries.keys
   end
 
-  # alias_method :orig_default_config_vars, :default_config_vars
-  # def default_config_vars
-  #   orig_default_config_vars.tap do |vars|
-  #     vars['PATH'] = (vars['PATH'] || '') << ':' << binary_names.map{|name| "/app/bin/#{name}/lib" }.join(':')
-  #   end
-  # end
+  alias_method :orig_default_config_vars, :default_config_vars
+  def default_config_vars
+    orig_default_config_vars.tap do |vars|
+      vars['LD_LIBRARY_PATH'] = binary_names.map{|name| "/app/bin/#{name}/lib" }.join(':')
+    end
+  end
 
   def install_rgeo_binary(name, version)
     bin_dir = "bin/#{name}"
@@ -33,13 +35,17 @@ class LanguagePack::Ruby < LanguagePack::Base
   end
 
   def pipe_debug(cmd)
-    topic "> #{cmd}"
-    pipe  cmd
+    if ENV['DEBUG_BUILDPACK'] =~ TRUTHY_STRING
+      topic "> #{cmd}"
+      pipe  cmd
+    end
   end
 
   def puts_debug(topic, string)
-    topic "puts #{topic} =>"
-    puts  string
+    if ENV['DEBUG_BUILDPACK'] =~ TRUTHY_STRING
+      topic "puts #{topic}"
+      puts  string
+    end
   end
 
   alias_method :orig_compile, :compile
@@ -47,17 +53,16 @@ class LanguagePack::Ruby < LanguagePack::Base
     # Recompile all gems if 'requested' via environment variable
     # The user-env-compile labs feature must be enabled for this to work
     # See https://devcenter.heroku.com/articles/labs-user-env-compile
-    cache_clear("vendor/bundle") if ENV['RECOMPILE_ALL_GEMS'] =~ /^(true|on|yes|1)$/
+    cache_clear("vendor/bundle") if ENV['RECOMPILE_ALL_GEMS'] =~ TRUTHY_STRING
 
 
     binaries.each do |(name, version)|
       install_rgeo_binary(name, version)
     end
 
-    # DEBUG
     binary_names.each do |name|
       pipe_debug "ls #{pwd}/bin/#{name}/include"
-      pipe_debug "ls #{pwd}/bin/#{name}/bin"
+      pipe_debug "ls #{pwd}/bin/#{name}/lib"
     end
     lib_so_conf_dir = "#{pwd}/etc/ld.so.conf.d"
     FileUtils.mkdir_p(lib_so_conf_dir)
@@ -68,7 +73,6 @@ class LanguagePack::Ruby < LanguagePack::Base
     end
     ENV['BUNDLE_BUILD__RGEO'] = binary_names.map{|name| "--with-#{name}-dir=#{pwd}/bin/#{name}"}.join(' ')
 
-    # DEBUG
     puts_debug 'ENV.to_hash.inspect', ENV.to_hash.inspect
     orig_compile
   end
