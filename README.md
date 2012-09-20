@@ -39,3 +39,24 @@ $ heroku config:remove RECOMPILE_ALL_GEMS
 $ heroku labs:disable user-env-compile
 ...
 ```
+
+Known Issues
+------------
+
+Sometimes deployments fail with a message like the following:
+
+```
+...
+-----> Fetching custom git buildpack... failed
+
+ !     Heroku push rejected due to an unrecognized error.
+ !     We've been notified, see http://support.heroku.com if the problem persists.
+
+
+To git@heroku.com:app-name.git
+ ! [remote rejected] master -> master (pre-receive hook declined)
+error: failed to push some refs to 'git@heroku.com:app-name.git'
+...
+```
+
+This problem is intermittent, and the solution is to repeat the deployment.
