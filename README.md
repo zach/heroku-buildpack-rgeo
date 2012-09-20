@@ -39,34 +39,3 @@ $ heroku config:remove RECOMPILE_ALL_GEMS
 $ heroku labs:disable user-env-compile
 ...
 ```
-
-Flow (TO-DO)
-------------
-
-Here's the basic flow of how the buildpack works:
-
-Ruby (Gemfile and Gemfile.lock is detected)
-
-* runs Bundler
-* installs binaries
-  * installs node if the gem execjs is detected
-* runs `rake assets:precompile` if the rake task is detected
-
-Rack (config.ru is detected)
-
-* everything from Ruby
-* sets RACK_ENV=production
-
-Rails 2 (config/environment.rb is detected)
-
-* everything from Rack
-* sets RAILS_ENV=production
-* install rails 2 plugins
-  * [rails_log_stdout](http://github.com/ddollar/rails_log_stdout)
-
-Rails 3 (config/application.rb is detected)
-
-* everything from Rails 2
-* install rails 3 plugins
-  * [rails3_server_static_assets](https://github.com/pedro/rails3_serve_static_assets)
-
