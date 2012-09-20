@@ -21,9 +21,7 @@ $ git push heroku master
 ### Configuring an existing app with rgeo support
 
 ```sh
-$ heroku config:add BUILDPACK_URL=http://github.com/jcamenisch/heroku-buildpack-rgeo
-...
-$ heroku config:add RECOMPILE_ALL_GEMS=1
+$ heroku config:add BUILDPACK_URL=http://github.com/jcamenisch/heroku-buildpack-rgeo LD_LIBRARY_PATH=/app/bin/geos/lib:/app/bin/proj/lib RECOMPILE_ALL_GEMS=1
 ...
 $ heroku labs:enable user-env-compile
 ...
@@ -36,7 +34,7 @@ The `RECOMPILE_ALL_GEMS` variable signals the build process to recompile the rge
 Both of these settings are unnecessary for the long term, and can be removed after RGeo is running properly, as follows.
 
 ```sh
-$ heroku config:add RECOMPILE_ALL_GEMS=0
+$ heroku config:remove RECOMPILE_ALL_GEMS
 ...
 $ heroku labs:disable user-env-compile
 ...
