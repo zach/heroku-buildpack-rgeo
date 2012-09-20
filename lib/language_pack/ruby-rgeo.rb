@@ -51,7 +51,7 @@ class LanguagePack::Ruby < LanguagePack::Base
 
     binary_names.each {|name| puts_and_pipe "ls #{pwd}/bin/#{name}" }
     binary_names.each do |name|
-      File.open("/etc/ld.so.conf.d/#{name}.conf", 'w') do |file|
+      File.open("#{pwd}/etc/ld.so.conf.d/#{name}.conf", 'w') do |file|
         file.write("/app/bin/#{name}/lib")
       end
     end
