@@ -11,12 +11,12 @@ class LanguagePack::Ruby < LanguagePack::Base
     binaries.keys
   end
 
-  alias_method :orig_default_config_vars, :default_config_vars
-  def default_config_vars
-    orig_default_config_vars.tap do |vars|
-      vars['PATH'] = (vars['PATH'] || '') << ':' << binary_names.map{|name| "/app/bin/#{name}/lib" }.join(':')
-    end
-  end
+  # alias_method :orig_default_config_vars, :default_config_vars
+  # def default_config_vars
+  #   orig_default_config_vars.tap do |vars|
+  #     vars['PATH'] = (vars['PATH'] || '') << ':' << binary_names.map{|name| "/app/bin/#{name}/lib" }.join(':')
+  #   end
+  # end
 
   def install_rgeo_binary(name, version)
     bin_dir = "bin/#{name}"
@@ -48,7 +48,13 @@ class LanguagePack::Ruby < LanguagePack::Base
     binaries.each do |(name, version)|
       install_rgeo_binary(name, version)
     end
+
     binary_names.each {|name| puts_and_pipe "ls #{pwd}/bin/#{name}" }
+    binary_names.each do |name|
+      File.open("/etc/ld.so.conf.d/#{name}.conf", 'w') do |file|
+        file.write("/app/bin/#{name}/lib")
+      end
+    end
     ENV['BUNDLE_BUILD__RGEO'] = binary_names.map{|name| "--with-#{name}-dir=#{pwd}/bin/#{name}"}.join(' ')
     puts ENV.to_hash.inspect
     orig_compile
