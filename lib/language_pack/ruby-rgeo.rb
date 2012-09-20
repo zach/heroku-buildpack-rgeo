@@ -32,9 +32,14 @@ class LanguagePack::Ruby < LanguagePack::Base
     run('pwd').chomp
   end
 
-  def puts_and_pipe(cmd)
-    puts '> ' << cmd
-    pipe cmd
+  def pipe_debug(cmd)
+    topic "> #{cmd}"
+    pipe  cmd
+  end
+
+  def puts_debug(topic, string)
+    topic "puts #{topic} =>"
+    pipe  string
   end
 
   alias_method :orig_compile, :compile
@@ -51,8 +56,8 @@ class LanguagePack::Ruby < LanguagePack::Base
 
     # DEBUG
     binary_names.each do |name|
-      puts_and_pipe "ls #{pwd}/bin/#{name}/include"
-      puts_and_pipe "ls #{pwd}/bin/#{name}/bin"
+      pipe_debug "ls #{pwd}/bin/#{name}/include"
+      pipe_debug "ls #{pwd}/bin/#{name}/bin"
     end
     lib_so_conf_dir = "#{pwd}/etc/ld.so.conf.d"
     FileUtils.mkdir_p(lib_so_conf_dir)
@@ -64,7 +69,7 @@ class LanguagePack::Ruby < LanguagePack::Base
     ENV['BUNDLE_BUILD__RGEO'] = binary_names.map{|name| "--with-#{name}-dir=#{pwd}/bin/#{name}"}.join(' ')
 
     # DEBUG
-    puts ENV.to_hash.inspect
+    puts_debug 'ENV.to_hash.inspect', ENV.to_hash.inspect
     orig_compile
   end
 end
