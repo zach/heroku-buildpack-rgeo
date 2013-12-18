@@ -53,7 +53,7 @@ class LanguagePack::Ruby < LanguagePack::Base
     # Recompile all gems if 'requested' via environment variable
     # The user-env-compile labs feature must be enabled for this to work
     # See https://devcenter.heroku.com/articles/labs-user-env-compile
-    cache_clear("vendor/bundle") if ENV['RECOMPILE_ALL_GEMS'] =~ TRUTHY_STRING
+    cache.clear("vendor/bundle") if ENV['RECOMPILE_ALL_GEMS'] =~ TRUTHY_STRING
 
 
     binaries.each do |(name, version)|
