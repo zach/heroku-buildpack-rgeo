@@ -28,7 +28,7 @@ class LanguagePack::Ruby < LanguagePack::Base
     filename = "#{name}-#{version}.tgz"
     topic("Downloading #{name} from #{File.join(RGEO_BASE_URL, filename)}")
     Dir.chdir(bin_dir) do |dir|
-      @fetchers[:rgeo].fetch_untar("#{filename}.tgz")
+      @fetchers[:rgeo].fetch_untar(filename)
     end
   end
 
