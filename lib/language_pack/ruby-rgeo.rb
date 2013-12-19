@@ -1,8 +1,10 @@
 class LanguagePack::Ruby < LanguagePack::Base
   TRUTHY_STRING = /^(true|on|yes|1)$/
+  RGEO_BASE_URL = "https://s3.amazonaws.com/camenischcreative/heroku-binaries/rgeo"
 
-  def rgeo_url(filename = nil)
-    "https://s3.amazonaws.com/camenischcreative/heroku-binaries/rgeo/#{filename}"
+  def initialize(build_path, cache_path=nil)
+    super(build_path, cache_path)
+    @fetchers[:rgeo] = LanguagePack::Fetcher.new(RGEO_BASE_URL)
   end
 
   def binaries
@@ -26,7 +28,7 @@ class LanguagePack::Ruby < LanguagePack::Base
     filename = "#{name}-#{version}.tgz"
     topic("Downloading #{name} from #{rgeo_url(filename)}")
     Dir.chdir(bin_dir) do |dir|
-      run("curl #{rgeo_url(filename)} -s -o - | tar xzf -")
+      @fetchers[:rgeo].fetch_untar("#{filename}.tgz")
     end
   end
 
