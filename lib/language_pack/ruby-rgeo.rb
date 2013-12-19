@@ -8,11 +8,11 @@ class LanguagePack::Ruby < LanguagePack::Base
   end
 
   def binaries
-    {geos: '3.3', proj: '4.8'}
+    ["geos-3.3", "proj-4.8"]
   end
 
   def binary_names
-    binaries.keys
+    binaries.map{|b| b.split("-").first}
   end
 
   alias_method :orig_default_config_vars, :default_config_vars
@@ -22,10 +22,11 @@ class LanguagePack::Ruby < LanguagePack::Base
     end
   end
 
-  def install_rgeo_binary(name, version)
+  def install_rgeo_binary(package)
+    name = package.split("-").first
     bin_dir = "bin/#{name}"
     FileUtils.mkdir_p bin_dir
-    filename = "#{name}-#{version}.tgz"
+    filename = "#{package}.tgz"
     topic("Downloading #{name} from #{File.join(RGEO_BASE_URL, filename)}")
     Dir.chdir(bin_dir) do |dir|
       @fetchers[:rgeo].fetch_untar(filename)
@@ -57,9 +58,8 @@ class LanguagePack::Ruby < LanguagePack::Base
     # See https://devcenter.heroku.com/articles/labs-user-env-compile
     cache.clear("vendor/bundle") if ENV['RECOMPILE_ALL_GEMS'] =~ TRUTHY_STRING
 
-
-    binaries.each do |(name, version)|
-      install_rgeo_binary(name, version)
+    binaries.each do |b|
+      install_rgeo_binary(b)
     end
 
     binary_names.each do |name|
