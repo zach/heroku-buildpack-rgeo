@@ -4,7 +4,7 @@ class LanguagePack::Ruby < LanguagePack::Base
 
   def initialize(build_path, cache_path=nil)
     super(build_path, cache_path)
-    @fetchers[:rgeo] = LanguagePack::Fetcher.new(RGEO_BASE_URL)
+    @fetchers[:buildpack] = LanguagePack::Fetcher.new(RGEO_BASE_URL)
   end
 
   def binaries
@@ -29,7 +29,7 @@ class LanguagePack::Ruby < LanguagePack::Base
     filename = "#{package}.tgz"
     topic("Downloading #{name} from #{File.join(RGEO_BASE_URL, filename)}")
     Dir.chdir(bin_dir) do |dir|
-      @fetchers[:rgeo].fetch_untar(filename)
+      @fetchers[:buildpack].fetch_untar(filename)
     end
   end
 
